@@ -1,0 +1,201 @@
+---
+title: "Intro to R Lesson 1: A Very Introduction to R"
+author: Natanop Pimonsathian
+---
+Hello there, welcome to the very first lesson of R Programming. This notebook demonstrates some basic
+basic function of R. We will discuss
+1. Basic R Commands
+2. Scalars, Vectors, and Matrices
+3. Functions
+4. Data Structures
+---
+Before we get there, let's make ourselves be familiarized with an R Notebook.  
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+---
+1.Basic R Commands 
+Example 1.1 R as a calculator. 
+```{r}
+10^4+5
+10^2+3
+
+(2+3) - (2/3)
+```
+
+Exercise 1.1 Compute the difference between 2020 and the year you started at this university and divide this by the difference between 2020 and the year you were born. Multiply this with 100 to get the percentage of your life you have spent at this university. Use brackets if you need them.
+```{r}
+#insert your answer here
+((2020-2019)/(2020-1993))*100
+
+```
+ 
+Example 1.2 Workspace
+```{r}
+a = 1
+a
+```
+```{r}
+a*5
+```
+```{r}
+a = a + 10
+a
+```
+
+We can also remove all variables from R's memory
+```{r}
+#all variables
+rm(list=ls())
+```
+only a single variable
+```{r}
+rm(a)
+```
+
+Exercise 1.2 Repeat the previous exercise, but with several steps in between. You can give the variables any name you want, but the name has to start with a letter.
+```{r}
+# insert your answer here
+b = 2019
+d = 1993
+f = 2020
+
+a = f - b 
+c = f - d 
+
+percent = (a/c)*100
+percent
+
+```
+
+2. Scalars, Vectors, and Matrices
+Example 2.1 Scalars
+```{r}
+b = 4 #this is a scalar
+b
+```
+
+Example 2.2 Vectors
+```{r}
+c = c(1,4,5) # this is a vector
+c
+```
+3. Functions
+Example 3.1 A function to compute the arithmetic mean of a vector C
+```{r}
+# the naive approach
+(1+4+5)/3
+```
+
+```{r}
+# using a function 'mean()'
+mean(x=c)
+mean(c)
+```
+Exercise 3.1 Compute the sum of 7, 8, 9, 10 by first combining them into a vector and using the function sum
+```{r}
+# insert your answer here
+d = c(7, 8, 9, 10)
+sum(d)
+```
+
+Example 3.2 Plots
+```{r}
+x = rnorm(100)
+plot(x)
+hist(x)
+boxplot(x)
+```
+To see how this function works
+```{r}
+help(rnorm)
+```
+
+4. Data Structures
+4.1 Vectors
+4.1.1 Vectorization
+```{r}
+vec1 = c(1,4,6,8,10)
+vec1
+```
+
+4.1.2 Indexing a vector
+```{r}
+vec1[4]
+vec1[-1]
+vec1[1:2] #indexing a vector
+```
+
+4.1.3 Updating the value in a vector
+```{r}
+vec1[4] = 2 
+vec1
+```
+
+4.1.4 Summation
+```{r}
+sum(vec1)
+```
+
+4.1.5 Creating a vector with seq() function
+```{r}
+vec2 = seq(from=0, to=1, by=0.25)
+vec2 
+```
+
+4.1.6 Vectors addition
+```{r}
+vec3 = vec1 + vec2 - vec2
+vec3 = vec1*vec2
+```
+
+4.2 Matrices
+```{r}
+z = matrix(data = c(9,2,3,4,5,6), ncol=3)
+z
+```
+
+Exercise 4.1 Put the numbers 31 to 60 in a vector named P and in a matrix with 6 rows and 5 columns named Q. Tip: use the function seq. Look at the different ways scalars, vectors and matrices are denoted in the workspace window.
+```{r}
+# insert you answer here
+
+```
+
+4.3 Data Frames
+```{r}
+t = data.frame(x = c(11,12,14), y = c(19,20,21), 
+               z = c(10,9,7))
+t
+```
+```{r}
+mat1 = matrix(data = c(9,2,"a","b",5,6), ncol=3)
+mat1
+```
+```{r}
+df1 = data.frame(x = c("a","aa","aaa"), y = c(19,20,21), 
+                 z = c(10,9,7))
+df1[2]*2
+```
+
+Exercise 4.2 Make a script ﬁle which constructs three random normal vectors of length 100. Call these vectors x1, x2 and x3. Make a data frame called t with three columns (called a, b and c) containing respectively x1, x1+x2 and x1+x2+x3. Call the following functions for this data frame: plot(t) and sd(t). Can you understand the results? Rerun this script a few times.
+```{r}
+# insert you answer here
+x1 = rnorm(100)
+x2 = rnorm(100)
+x3 = rnorm(100)
+
+a <- x1
+b <- x1+x2
+c <- x1+x2+x3
+
+t = data.frame(a, b, c)
+
+plot(t)
+sd(t)
+```
+
