@@ -1,0 +1,108 @@
+---
+title: "Intro to R Lesson 2: Data Transformation"
+author: Natanop Pimonsathian
+---
+Here we are at the Lesson 2. You are about to learn how to transform data, including filtering, indexing, renaming, etc. We will explore a few example of data sets.
+
+The first data set, 'house.txt', contains property sales records between 2006 and 2010. The data has many attributes, such as sale price, sizes, and conditions.   
+---
+```{r read in data}
+houses <- read.delim("~/Dropbox/Gitbucket/Course/input/houses.txt",stringsAsFactors = FALSE)
+```
+
+```{r read in data using a relative path}
+## reading in 'houses' using a relative path
+houses <- read.delim("input/houses.txt", stringsAsFactors = FALSE)
+```
+
+Primary Data Exploration 
+```{r print the entire dataset}
+houses
+
+```
+ 
+```{r displaying Top/Last 5 rows of the data }
+head(houses)
+tail(houses)
+```
+
+Inspect the overall data structure with str()
+```{r}
+str(houses)
+```
+
+Quick question: how many rows are in the 'houses' data set?
+```{r displaying the dimensions}
+dim(houses)
+```
+Transforming data using base R 
+```{r check if there are missing data points}
+is.na(houses)
+is.na(houses$PID)
+```
+
+Exercise 1: Inspect NAs in columns 'Pool.QC', 'Year.Built', and 'Fence'
+```{r Exercise 1 Answers}
+#insert your answers here
+
+
+```
+Using the Base R Package, we can do a number of operations on the data. The first example is about creating a new column and deleting some columns
+```{r Creating a new column}
+houses$Total.Lot.Area <- houses$Lot.Frontage + houses$Lot.Area
+```
+```{r Deleting irrelevant columns}
+houses$Order <- NULL 
+```
+Exercise 2: Creating a new column called 'Overall.rating' as an average score between 'Overall.Qual' and 'Overall.Cond'. 
+```{r Exercise 2 Answers}
+# insert your answer here
+
+```
+We can use the Base R package to filter the numbers of observations
+```{r Filter to see the first 4 houses}
+four_houses <- houses[c(1, 2, 3, 4), ]
+dim(four_houses)
+```
+```{r Filter to see the first 10 houses}
+ten_houses <- houses[1:10, ]
+dim(ten_houses)
+```
+
+Selecting particular rows based on their properties. The below operations are used to filter the rows that fall under the conditions
+
+* `>`: greater than
+* `>=`: greater than or equal to
+* `<`: less than
+* `<=`: less than or equal to
+* `==`: equal to
+* `!=`: not equal to
+* `!`: not
+* `&`: and
+* `|`: or
+
+Example: Filter the houses that are cheaper than 100k 
+```{r subsetting cheap houses}
+cheap_houses <- houses[houses$SalePrice < 100000, ]
+```
+Find the houses that were built and remodified in the same year (Year.Built = Year.Remod.AA)
+```{r non-modified houses}
+n_mod_houses <- houses[houses$Year.Built == houses$Year.Remod.Add, ]
+```
+select all houses built before 1900, storing only the basement columns.
+```{r old basement columns}
+old_basements <- houses[houses$Year.Built < 1900,
+  grepl("Bsmt", names(houses))]
+```
+The 'grepl' command is used to check whether the first argument is a substring of the second argument 
+```{r Garage columns for houses with a big garage}
+garage_big_houses <- houses[houses$Garage.Area >= 400 ,
+  grepl("Garage", names(houses))]
+
+```
+Also, we can use '%in%' to check whether the left input is in the right input 
+```{r %in% demonstration}
+c("Risa", "Ham", "Bow", "Jane") %in% c("Ham", "Jane")
+```
+
+
