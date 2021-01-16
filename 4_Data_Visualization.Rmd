@@ -1,0 +1,156 @@
+---
+Title: "Intro to R Lesson 4: Data Visualization"
+Author: Natanop Pimonsathian
+Instructor: Natanop Pimonsathian
+---
+This lesson discusses the common visualization tools. We will learn to transform
+a complex Data Frame into an intelligent pictorial presentation. 
+
+We will focus on
+- The elements of a visualization
+- Plotting Scatterplots, boxplots, barplots, lineplots
+- Working with the Grammar of Graphics (ggplot2) library. 
+
+```{r read in data using a relative path}
+## reading in 'houses' using a relative path
+houses <- read.delim("input/houses.txt", stringsAsFactors = FALSE)
+```
+
+Plotting in one dimension - Boxplot
+
+```{r boxplot demo}
+boxplot(houses$SalePrice)
+```
+Exercise 1: plot a boxplot of the variable 'Overall.Qual'
+```{r Exercise 1 Answer}
+boxplot(houses$Overall.Qual)
+```
+
+Plotting in two dimensions - Scatterplot
+```{r boxplot Scatterplot}
+plot(x=houses$Overall.Qual,y=houses$SalePrice)
+plot(y=houses$Overall.Qual,x=houses$SalePrice)
+```
+Exercise 2.1: plot a scatterplot of variables 'SalePrice' as a function of 'Overall.Cond'
+```{r Exercise 2.1 Answer}
+plot(x=houses$Overall.Cond,y=houses$SalePrice)
+
+```
+
+Exercise 2.2: plot a scatterplot of variables 'Overall.Qual' as a function of 'Overall.Cond'
+```{r Exercise 2.2 Answer}
+plot(x=houses$Overall.Cond,y=houses$Overall.Qual)
+
+```
+
+Now, you may wonder how can we adjust the aesthetic of the plot. For example,
+how to add the title of the plot. The below chunk shows a full modification of 
+a scatter plot. 
+```{r Full plot demo}
+plot(x=houses$Overall.Qual, y=houses$SalePrice, 
+     main = "Price as function of the quality score",
+     xlab = "Quality Score", ylab = "Selling Price",
+     pch = 19)
+```
+
+What if you want to decorate more? We can use the so-called ggplot2 library. 
+```{r installing the ggplot2}
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+The first demonstration is to plot the same plot as shown before, the association
+between house quality and selling price. 
+```{r ggplot2 First Demo}
+ggplot() +
+  geom_point(data = houses, mapping = aes(x = Overall.Qual, y = SalePrice))
+```
+
+We will add another element, a regression line, in order to the see the trend.  
+```{r Scatterplot with the best fit line}
+ggplot() +
+  geom_point(data = houses, aes(x = Overall.Qual, y = SalePrice)) +
+  geom_smooth(data = houses, aes(x = Overall.Qual, y = SalePrice))
+```
+
+This can also written in a more compact format.  
+```{r Scatterplot with the best fit line - alternate version}
+ggplot(data = houses, aes(x = Overall.Qual, y = SalePrice)) +
+  geom_point() +
+  geom_smooth()
+```
+
+Exercise 3: plot a scatterplot of variables 'Overall.Qual' as a function of 'Overall.Cond' and also plot the best fit line. 
+
+```{r Exercise 3 Answer }
+ggplot(data=houses, mapping = aes(x=Overall.Cond, y=Overall.Qual)) +
+  geom_point()
+  #geom_smooth()
+
+```
+
+Plotting a boxplot in ggplot2 
+```{r Boxplot demo}
+ggplot(data = houses, aes(y = SalePrice)) +
+  geom_boxplot()
+```
+
+How can we compare between different building conditions? We may add the 
+x-axis to group the selling price into each building type. 
+```{r Boxplot demo 2}
+ggplot(data = houses, aes(x = Bldg.Type, y = SalePrice)) +
+  geom_boxplot()
+```
+We can also add color into each chunk 
+```{r Scatterplot with color demo}
+ggplot(data = houses, aes(x = Overall.Qual, y = SalePrice, color = Bldg.Type,
+                          shape = Bldg.Type, size = Bldg.Type)) +
+  geom_point()
+```
+Barplot
+```{r Barplot Demo}
+ggplot(data = houses, aes(x = Bldg.Type)) +
+  geom_bar()
+```
+Histogram
+```{r Histogram demo}
+ggplot(data = houses, aes(x = Gr.Liv.Area)) +
+  geom_histogram(bins = 100)
+```
+Line plots: plotting with statistics
+
+```{r Stat count}
+ggplot(data = houses, aes(x = Yr.Sold)) +
+  geom_line(stat = "count")
+```
+```{r Stat mean}
+ggplot(data = houses, aes(x = Bldg.Type, y = SalePrice)) +
+  geom_bar(stat = "summary")
+```
+Additional things to know: Chart Decoration 
+```{r Naming things}
+plot1 <- ggplot(data = houses, aes(x = Bldg.Type, y = SalePrice)) +
+  geom_bar(stat = "summary")
+
+plot1.1 <- plot1 + ggtitle("Revenue per bulding type") +
+  xlab("Property type") + 
+  ylab("Total Revenue")
+```
+
+```{r}
+plot1 + ggtitle("Revenue per bulding type") +
+  xlab("Property type") + 
+  ylab("Total Revenue")
+
+plot1
+```
+
+```{r}
+plot2 <- ggplot(data = houses, aes(x = Lot.Area, y = SalePrice, color = House.Style,
+                          size = Overall.Qual)) +
+  geom_point() +
+  ggtitle("Revenue per lot area") +
+  xlab("Lot Area") +
+  ylab("Selling Price")
+```
+

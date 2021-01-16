@@ -1,0 +1,136 @@
+---
+title: "Intro to R Lesson 3: Data Transformation Part 2"
+author: Natanop Pimonsathian
+---
+This lesson is the continued story of Lesson 2. Last week, we learned to import the data file into R environment and to use some functions on data manipulation. This week, we will be learning to process the data with a more intelligent way. 
+
+Let's recall a few things from the previous unit. We have used to filter data with operations and functions in Base R. Those tools have a number of advantages and also a bit of disadvantages. 
+
+Remember the last exercise from the previous chapter? Where we had to extract the observations that meet the criteria. We have to write several lines of code to archive that. 
+
+```{r read in data using a relative path}
+## reading in 'houses' using a relative path
+houses <- read.delim("input/houses.txt", stringsAsFactors = FALSE)
+```
+
+Refreshing Exercise: Name all the houses that
+- Built after the year 1990 
+- Have overall quality rating more than or equal to 7.00
+- Are accessible by paved street 
+- Selling prices are less than 200000 USD 
+- Extract the columns that are related to basement only 
+
+```{r recall the exercise}
+houses_subset <- houses[houses$Year.Built > 1990 &
+                        houses$Overall.Qual >= 7 &
+                        houses$Street == 'Pave'& 
+                        houses$SalePrice < 200000,
+                        grepl("Bsmt", names(houses))]
+```
+
+```{r}
+houses_subset_2 <- houses %>%
+    filter(Year.Built > 1990, Overall.Qual >= 7, 
+           Street == 'Pave', SalePrice < 200000)
+  
+```
+
+```{r select columns that contain Bsmt with dplyr}
+houses_Bsmt <- houses %>% 
+  select(contains("Bsmt"))
+```
+
+
+
+Now we will learn to use the Pipe operator, %>%  
+To use the operator, we need to install the package called 'dplyr'. 
+
+```{r install dplyr}
+install.packages('dplyr')
+library('dplyr')
+
+```
+
+Let's perform a test on the basic operation: filtering the houses that build after the year 1990 and have overall quality more than or equal to 7. 
+
+Performing this with BaseR will look like
+```{r Base R demo}
+houses_old_good1 <- houses[houses$Year.Built > 1990 &
+                          houses$Overall.Qual >= 7, ]
+dim(houses_old_good1)
+```
+
+Performing this with dplyr will look like
+```{r dplyr demo}
+houses_old_good2 <- houses %>%
+  filter(Year.Built > 1990, Overall.Qual >= 7)
+
+dim(houses_old_good2)
+```
+
+What we can do with the Pipe operation?
+1. Filter 
+```{r Filter demo: find the houses with a large garage}
+houses_large_grg <- houses %>%
+  filter(Garage.Area > 300)
+
+one_family_dplyr <- houses %>%
+  filter(Bldg.Type == "1Fam")
+```
+
+2. Select some columns
+```{r Select columns demo: extracting sale prices and year built}
+houses_price_year <- houses %>%
+  select(SalePrice, Year.Built)
+
+dim(houses_price_year)
+```
+```{r}
+houses_cleaned <- houses %>%
+  select(-Order, -SalePrice)
+
+```
+
+3. Create a new column 
+```{r Create a new column}
+houses_overall_rating <- houses %>% 
+  mutate(Overall_rating = (Overall.Cond+Overall.Qual)/2)
+```
+
+4. Sort rows  
+```{r Sorting }
+## sorting selling prices from high to low 
+houses_price <- houses %>%
+  select(PID, SalePrice)
+
+sorted_prices_low <- arrange(houses_price, SalePrice) #from low to high
+sorted_prices_high <- arrange(houses_price, desc(SalePrice)) #from high to low
+```
+
+Exercise: Select columns: select the column that contains "Garage" in their names. Then sort the area from the largest to the smallest
+
+```{r Select columns and sort }
+garage_area <- houses %>%
+  select(Garage.Area) %>%
+  arrange(desc(Garage.Area))
+
+```
+
+5. Grouping
+```{r Grouping}
+## adding a new grouping based on two variables &
+## summarizing the mean sales prices
+price_per_type <- houses %>%
+  group_by(Bldg.Type) %>%
+  summarise(Mean.Price = mean(SalePrice))
+```
+
+Exercise: Summarize the number of houses and median price per building type. 
+```{r No. of houses and thier median prices per building type}
+price_per_type <- houses %>%
+  group_by(Bldg.Type) %>%
+  summarise(Med.Price = median(SalePrice))
+```
+
+
+
