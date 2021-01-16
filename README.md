@@ -1,4 +1,4 @@
-# IntroR
+# Introduction to R programming
 R Scripts for the Intro to R course
 
 Open courseware that includes
